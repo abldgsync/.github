@@ -11,7 +11,7 @@
 [k3s]: https://github.com/abldgsync/k3s "abldgsync/k3s 仓库"
 [ziglang]: https://github.com/abldgsync/ziglang "abldgsync/ziglang 仓库"
 [docker_desktop]: https://github.com/abldgsync/docker_desktop "abldgsync/docker_desktop 仓库"
-[shared_actions]: https://github.com/abldgsync/shared_actions "abldgsync/shared_actions 仓库"
+[sacts]: https://github.com/abldgsync/.sacts "abldgsync/.sacts 仓库"
 
 ## 📦 仓库总览
 
@@ -26,7 +26,7 @@
 
 ## 🏗️ 架构
 
-- **共享 Action 仓库 [shared_actions][shared_actions]**:每个工具对应一个组合 Action `sync_<tool>/`,被各工具仓库的工作流以 `uses: abldgsync/shared_actions/sync_<tool>@main` 引用(建议将 `@main` 钉定为具体 commit SHA 以获得可复现构建).
+- **共享 Action 仓库 [sacts][sacts]**:每个工具对应一个组合 Action `sync_<tool>/`,被各工具仓库的工作流以 `uses: abldgsync/.sacts/sync_<tool>@main` 引用(建议将 `@main` 钉定为具体 commit SHA 以获得可复现构建).
 - **工作流模板统一**:每个工具仓库的 `.github/workflows/dosync.yaml` 结构一致,仅一行 `uses` 指向对应的共享 Action,便于维护.
 - **脚本化阶段**:每个 `sync_<tool>/scripts/` 下按职责拆分为带序号的脚本,逻辑清晰,可单独调试:
   - `s1_resolve.sh` ---- 解析版本并生成下载 / 校验清单
@@ -56,7 +56,7 @@
 
 ## 🤝 参与方式
 
-- 新增工具:在 `shared_actions` 增加 `sync_<tool>/`,参照既有模块提供 `s1~s3` 脚本(k3s 另含 `s4_publish.sh`),再于对应仓库建立 `dosync.yaml` 引用即可.
+- 新增工具:在 `.sacts` 增加 `sync_<tool>/`,参照既有模块提供 `s1~s3` 脚本(k3s 另含 `s4_publish.sh`),再于对应仓库建立 `dosync.yaml` 引用即可.
 - 反馈与贡献:欢迎通过 Issue / PR 提交建议与改进.
 
 ## 📄 许可
