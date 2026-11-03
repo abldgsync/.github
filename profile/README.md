@@ -94,4 +94,5 @@ jobs:
 
 ## 📄 许可
 
-本组织仓库采用 MIT License（详见各仓库 `LICENSE`）。
+- 各**二进制镜像仓库**（golang / helm / kubectl / k3s / ziglang / docker_desktop）为上游官方发行物的镜像，本身不附带独立 LICENSE 文件；所含二进制的许可随各自上游项目（Go / Kubernetes / Helm / K3s / Zig / Docker 等）而定，请以对应上游的许可证为准。
+- 本组织基础设施仓库 `abldgsync/.github` 采用 MIT License。
