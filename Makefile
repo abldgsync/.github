@@ -18,7 +18,10 @@ REF      ?= main
 TOOLS    := golang helm kubectl k3s ziglang docker_desktop
 
 # 仅在对应变量被赋值时追加 -f 字段(docker_desktop 无这些入参, 请勿对其传参)
-FIELD_FLAGS = $(if $(binvern),-f binvern=$(binvern)) $(if $(withsvr),-f withsvr=$(withsvr)) $(if $(lastn),-f lastn=$(lastn))
+FIELD_FLAGS:=
+FIELD_FLAGS+=$(if $(binvern),-f binvern=$(binvern))
+FIELD_FLAGS+=$(if $(withsvr),-f withsvr=$(withsvr))
+FIELD_FLAGS+=$(if $(lastn),-f lastn=$(lastn))
 
 .PHONY: sync sync-all list help
 
@@ -30,7 +33,10 @@ help:
 
 sync:
 	@test -n "$(TOOL)" || { echo "错误: 必须指定 TOOL, 例如 make sync TOOL=golang"; exit 1; }
-	@case " $(TOOLS) " in *" $(TOOL) "*) ;; *) echo "错误: 未知 TOOL=$(TOOL), 可选: $(TOOLS)"; exit 1;; esac
+	@case " $(TOOLS) " in \
+	*" $(TOOL) "*) ;; \
+	*) echo "错误: 未知 TOOL=$(TOOL), 可选: $(TOOLS)"; exit 1;; \
+	esac
 	gh workflow run $(WORKFLOW) --repo $(ORG)/$(TOOL) --ref $(REF) $(FIELD_FLAGS)
 
 sync-all:
