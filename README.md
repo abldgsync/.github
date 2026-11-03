@@ -2,7 +2,7 @@
 
 本仓库存放一个**可复用的 GitHub 组合 Action(composite action)** `sync`,供 `abldgsync` 组织下各工具仓库(如 `golang`、`kubectl`、`k3s` 等)通过 `uses:` 引用,把各官方源二进制/安装包同步发布到对应仓库的 Releases.
 
-> 引用时写 `abldgsync/actions/sync@main`,通过 `with: tool: <工具名>` 选择具体工具.
+> 引用时写 `abldgsync/.github/sync@main`,通过 `with: tool: <工具名>` 选择具体工具.
 
 ## 📁 目录结构
 
@@ -61,7 +61,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Sync Golang
-        uses: abldgsync/actions/sync@main
+        uses: abldgsync/.github/sync@main
         with:
           tool: golang
           binvern: ''   # 不填则用默认(最新两个稳定版),可手动指定版本号
@@ -79,6 +79,6 @@ jobs:
 
 1. 在 `sync/tools/` 下新建 `<tool>.sh`,提供元数据(`NAME`/`URL_BASE`/`CHECKSUM`/`TAG_PREFIX`/`KEEP`)与 `s1_parse()`;
 2. 在 `sync/action.yaml` 的 `inputs.tool.description`(枚举)中登记工具名;
-3. 在各工具仓库工作流中用 `uses: abldgsync/actions/sync@main` + `with: { tool: <tool> }` 引用.
+3. 在各工具仓库工作流中用 `uses: abldgsync/.github/sync@main` + `with: { tool: <tool> }` 引用.
 
 无需再新建目录或重复编排脚本 —— 这是相对旧版(每工具一个目录)的最大改进.
