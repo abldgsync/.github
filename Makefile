@@ -13,9 +13,16 @@
 #   make help                              # 查看帮助
 
 ORG      ?= abldgsync
-WORKFLOW ?= dosync.yaml
 REF      ?= main
-TOOLS    := golang helm kubectl k3s ziglang docker_desktop
+WORKFLOW ?= dosync.yaml
+
+TOOLS:=
+TOOLS+=golang
+TOOLS+=helm
+TOOLS+=kubectl
+TOOLS+=k3s
+TOOLS+=ziglang
+TOOLS+=docker_desktop
 
 # 仅在对应变量被赋值时追加 -f 字段(docker_desktop 无这些入参, 请勿对其传参)
 FIELD_FLAGS:=
