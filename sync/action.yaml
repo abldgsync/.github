@@ -1,0 +1,56 @@
+name: Sync Binaries
+description: 从各官方源下载并发布二进制到调用方仓库(支持 golang/helm/kubectl/k3s/ziglang/docker_desktop)
+inputs:
+  tool:
+    description: '工具名: golang / helm / kubectl / k3s / ziglang / docker_desktop'
+    required: true
+  binvern:
+    description: '版本约束(各工具语义见 tools/<tool>.sh 注释;不填用默认)'
+    required: false
+    default: ''
+  lastn:
+    description: '保留的最新稳定版本数量(zig 专用,默认 4)'
+    required: false
+    default: '4'
+  withsvr:
+    description: '包含 SERVER/NODE 包(kubectl 专用,0|1,默认 1)'
+    required: false
+    default: '1'
+  baseurl:
+    description: '覆盖下载站根地址(golang/kubectl 可选,留空用上游默认)'
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: S1 解析版本并生成下载清单
+      shell: bash
+      env:
+        TOOL: ${{ inputs.tool }}
+        WANT: ${{ inputs.binvern }}
+        LAST_N: ${{ inputs.lastn }}
+        WXSV: ${{ inputs.withsvr }}
+        BASE_URL: ${{ inputs.baseurl }}
+        GH_TOKEN: ${{ github.token }}
+      run: CS=1 bash "${{ github.action_path }}/dosync.sh"
+
+    - name: S2 并行下载全部二进制包
+      shell: bash
+      env:
+        TOOL: ${{ inputs.tool }}
+      run: CS=2 bash "${{ github.action_path }}/dosync.sh"
+
+    - name: S3 校验
+      shell: bash
+      env:
+        TOOL: ${{ inputs.tool }}
+      run: CS=3 bash "${{ github.action_path }}/dosync.sh"
+
+    - name: 发布到 Releases(按版本循环)
+      shell: bash
+      env:
+        TOOL: ${{ inputs.tool }}
+        GH_TOKEN: ${{ github.token }}
+        # 本步骤不 checkout,无 .git,gh 无法靠 git 推断仓库;显式指定目标仓库
+        GH_REPO: ${{ github.repository }}
+      run: CS=4 bash "${{ github.action_path }}/dosync.sh"
